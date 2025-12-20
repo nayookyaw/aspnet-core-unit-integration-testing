@@ -13,7 +13,7 @@ This repository is a **learning and reference project** for building a simple **
 
 ---
 
-## 0. Prerequisites (Windows)
+## Prerequisites (Windows)
 
 Make sure the following are installed:
 
@@ -23,6 +23,7 @@ Make sure the following are installed:
 Verify installation:
 `dotnet --version`
 
+```
 UserApiDemo/
 │
 ├── UserApi/                     # ASP.NET Core 9 Web API
@@ -44,3 +45,4 @@ UserApiDemo/
 │   └── UserApi.IntegrationTests.csproj
 │
 └── UserApiDemo.sln
+```
