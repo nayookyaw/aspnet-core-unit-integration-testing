@@ -4,11 +4,35 @@ using UserApi.Dtos;
 using UserApi.Services;
 using UserApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using UserApi.Consts;
 
 namespace UserApi.UnitTests.Controllers.User;
 
 public class UsersControllerTests
 {
+    [Fact]
+    public async Task Create_Return_Conflict_On_Duplicate_Email()
+    {
+        // Arrange
+        var createUserRequest = new CreateUserRequest("Alice", "alice@email.com");
+
+        var _iUserServiceMock = new Mock<IUserService>();
+        _iUserServiceMock.Setup(userSvc => userSvc.CreateAsync(It.IsAny<CreateUserRequest>(), default))
+            .ThrowsAsync(new InvalidOperationException(Message.DuplicateEmail));
+        var _userController = new UserController(_iUserServiceMock.Object);
+
+        // Act
+        ActionResult<UserResponse> result = await _userController.Create(createUserRequest, default);
+
+        // Assert
+        var okResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        var returnValue = Assert.IsAssignableFrom<dynamic>(okResult.Value);
+        // Extract the dynamic property 
+        var message = (string)returnValue.GetType().GetProperty("message")!.GetValue(returnValue)!; 
+        Assert.Equal(400, okResult.StatusCode);
+        Assert.Equal(Message.DuplicateEmail, message);
+    }
+
     [Fact]
     public async Task GetById_Return_NotFound()
     {

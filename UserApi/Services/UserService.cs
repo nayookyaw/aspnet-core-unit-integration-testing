@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UserApi.Consts;
 using UserApi.Data;
 using UserApi.Dtos;
 using UserApi.Models;
@@ -15,7 +16,7 @@ public class UserService : IUserService
         Boolean isExit = await _db.Users.AnyAsync(user => user.Email == email, ct);
         if (isExit)
         {
-            throw new InvalidOperationException("Email already exists!");
+            throw new InvalidOperationException(Message.DuplicateEmail);
         }
         User newUser = new User
         {
