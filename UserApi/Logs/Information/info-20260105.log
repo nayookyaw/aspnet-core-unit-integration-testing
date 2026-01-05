@@ -1,0 +1,16 @@
+2026-01-05 14:21:45.474 +13:00 [INF] Now listening on: http://localhost:5272
+2026-01-05 14:21:45.492 +13:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-05 14:21:45.493 +13:00 [INF] Hosting environment: Development
+2026-01-05 14:21:45.493 +13:00 [INF] Content root path: D:\self-learning\aspnet-learning\aspnet-core-unit-integration-testing\UserApi
+2026-01-05 14:21:49.211 +13:00 [INF] Request starting HTTP/1.1 GET http://localhost:5272/api/users/867ee44e-4a53-44e1-a24a-5e259da1e9e3 - null null
+2026-01-05 14:21:49.228 +13:00 [INF] Executing endpoint 'UserApi.Controllers.UserController.GetById (UserApi)'
+2026-01-05 14:21:49.238 +13:00 [INF] Route matched with {action = "GetById", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[UserApi.Dtos.UserResponse]] GetById(System.Guid, System.Threading.CancellationToken) on controller UserApi.Controllers.UserController (UserApi).
+2026-01-05 14:21:49.746 +13:00 [INF] Executed DbCommand (21ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[CreatedAt], [u].[Email], [u].[Username]
+FROM [Users] AS [u]
+WHERE [u].[Id] = @__id_0
+2026-01-05 14:21:49.761 +13:00 [INF] Executing OkObjectResult, writing value of type 'UserApi.Dtos.UserResponse'.
+2026-01-05 14:21:49.790 +13:00 [INF] Executed action UserApi.Controllers.UserController.GetById (UserApi) in 548.9269ms
+2026-01-05 14:21:49.793 +13:00 [INF] Executed endpoint 'UserApi.Controllers.UserController.GetById (UserApi)'
+2026-01-05 14:21:49.797 +13:00 [INF] Request finished HTTP/1.1 GET http://localhost:5272/api/users/867ee44e-4a53-44e1-a24a-5e259da1e9e3 - 200 null application/json; charset=utf-8 586.9808ms
+2026-01-05 14:22:11.788 +13:00 [INF] Application is shutting down...

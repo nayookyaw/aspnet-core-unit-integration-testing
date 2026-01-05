@@ -1,12 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using UserApi.Data;
 using UserApi.Services;
+using UserApi.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Configure Serilog
+SerilogUtil.Configure(builder);
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
