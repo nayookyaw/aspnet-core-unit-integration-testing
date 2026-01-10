@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using UserApi.Data;
+using UserApi.Middleware;
 using UserApi.Services;
 using UserApi.Utils;
 
@@ -18,11 +19,15 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 });
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient<GlobalExceptionMiddleware>();
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+// user middleware for global exception handling before MapControllers
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.MapControllers();
 
