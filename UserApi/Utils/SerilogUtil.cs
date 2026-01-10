@@ -1,6 +1,7 @@
 
 using Serilog;
 using Serilog.Events;
+using Serilog.Filters;
 
 namespace UserApi.Utils;
 
@@ -20,6 +21,19 @@ public static class SerilogUtil
             ConfigureLevelFile(lc, LogEventLevel.Error, "error.log");
             ConfigureLevelFile(lc, LogEventLevel.Debug, "debug.log");
 
+            // Text Channel logs
+            lc.WriteTo.Logger(l => l
+                .Filter.ByIncludingOnly(Matching.WithProperty("Channel", "Text"))
+                .WriteTo.File(
+                    path: Path.Combine("Logs", "Text", "text-.log"),
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 14,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(2),
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Message:lj}{NewLine}{Exception}"
+                ));
+
+            lc.WriteTo.Console();
             // In Development, log to console as well
             lc.WriteTo.Console();
         });
@@ -30,14 +44,18 @@ public static class SerilogUtil
         lc.WriteTo.Logger(l => l
             .Filter.ByIncludingOnly(e => e.Level == level)
             .WriteTo.File(
-                // path: Path.Combine("Logs", fileName.Replace(".log", "-.log")), // info-.log etc
-                path: Path.Combine("Logs", level.ToString(), fileName.Replace(".log", "-.log")), // Logs/Information/info-.log etc
+                path: Path.Combine("Logs", level.ToString(), fileName.Replace(".log", "-.log")),
                 rollingInterval: RollingInterval.Day,
-                retainedFileCountLimit: 10,
+                retainedFileCountLimit: 14,
                 shared: true,
                 flushToDiskInterval: TimeSpan.FromSeconds(2),
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
             ));
+    }
+
+    public static void LogText(string message)
+    {
+        Log.ForContext("Channel", "Text").Information(message);
     }
 
     public static void LogInfo(string message)
