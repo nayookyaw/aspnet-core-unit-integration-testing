@@ -10,6 +10,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.WebHost.UseSentry(o =>
+{
+    builder.Configuration.GetSection("Sentry").Bind(o);
+
+    // optional:
+    o.SendDefaultPii = false;
+    o.MaxBreadcrumbs = 100;
+});
+
 // Configure Serilog
 SerilogUtil.Configure(builder);
 

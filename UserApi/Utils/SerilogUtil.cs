@@ -32,12 +32,33 @@ public static class SerilogUtil
                     flushToDiskInterval: TimeSpan.FromSeconds(2),
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Message:lj}{NewLine}{Exception}"
                 ));
+            
+            // ✅ Sentry (events + breadcrumbs)
+            var dsn = ctx.Configuration["Sentry:Dsn"];
+            if (!string.IsNullOrWhiteSpace(dsn))
+            {
+                lc.WriteTo.Sentry(o =>
+                {
+                    o.Dsn = dsn;
 
-            lc.WriteTo.Console();
+                    // logs at/above this level become Sentry "events"
+                    o.MinimumEventLevel = ParseLevel(ctx.Configuration["Sentry:MinimumEventLevel"], LogEventLevel.Error);
+
+                    // lower level logs can be attached as breadcrumbs
+                    o.MinimumBreadcrumbLevel = ParseLevel(ctx.Configuration["Sentry:MinimumBreadcrumbLevel"], LogEventLevel.Information);
+
+                    o.Environment = ctx.Configuration["Sentry:Environment"] ?? builder.Environment.EnvironmentName;
+                    o.Release = ctx.Configuration["Sentry:Release"];
+                });
+            }
+
             // In Development, log to console as well
             lc.WriteTo.Console();
         });
     }
+
+    private static LogEventLevel ParseLevel(string? value, LogEventLevel fallback)
+        => Enum.TryParse(value, ignoreCase: true, out LogEventLevel lvl) ? lvl : fallback;
 
     private static void ConfigureLevelFile(LoggerConfiguration lc, LogEventLevel level, string fileName)
     {

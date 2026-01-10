@@ -32,6 +32,7 @@ public class UserService : IUserService
 
     public async Task<UserResponse?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
+        SerilogUtil.LogError($"[Error] Test Sentry monitoring {DateTime.UtcNow} {id}");
         SerilogUtil.LogError($"[Error] Fetching user by ID: {id}");
         SerilogUtil.LogInfo($"[Info] Fetching user by ID: {id}");
         SerilogUtil.LogText($"[Text] Fetching user by ID: {id}");
